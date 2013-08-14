@@ -7,10 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import android.R.color;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.opengl.GLUtils;
+import android.os.Parcelable.Creator;
 import android.util.Log;
 
 public class TextureManager
@@ -45,7 +50,6 @@ public class TextureManager
 					bitmap.getHeight()));
 			bitmap.recycle();
 		}
-
 		return indexes[0];
 	}
 
@@ -92,6 +96,25 @@ public class TextureManager
 	{
 		indexes[0] = textureName;
 		gl.glDeleteTextures(1, indexes, 0);
+	}
+
+	public static Bitmap noise(int size, float freq, float t)
+	{
+		int colors[] = new int[size * size];
+
+		for (int i = 0; i < colors.length; i++)
+		{
+			float x = ((float) (i % size)) / freq;
+			float y = ((float) (i / size)) / freq;
+
+			int r = (int) (128.0f * (1.0f + SimplexNoise.noise(x, y, t)));
+			int g = (int) (128.0f * (1.0f + SimplexNoise.noise(x + size, y, t)));
+			int b = (int) (128.0f * (1.0f + SimplexNoise.noise(x, y + size, t)));
+
+			colors[i] = (0xff << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+		}
+
+		return Bitmap.createBitmap(colors, size, size, Config.ARGB_8888);
 	}
 
 	public static Bitmap load(Context context, String name)
