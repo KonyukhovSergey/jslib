@@ -12,7 +12,7 @@ public class Light
 		this.gl = gl;
 		init();
 		
-		gl.glLightfv(light, pname, params, offset);
+		//gl.glLightfv(light, pname, params, offset);
 	}
 
 	private void init()

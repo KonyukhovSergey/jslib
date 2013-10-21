@@ -117,6 +117,33 @@ public class TextureManager
 		return Bitmap.createBitmap(colors, size, size, Config.ARGB_8888);
 	}
 
+	private static int[] pixels = new int[0];
+
+	public static void noise(Bitmap bmp, float freq, float t)
+	{
+		int size = bmp.getWidth();
+		if (pixels.length != bmp.getWidth() * bmp.getHeight())
+		{
+			pixels = new int[bmp.getWidth() * bmp.getHeight()];
+		}
+
+		bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+
+		for (int i = 0; i < pixels.length; i++)
+		{
+			float x = ((float) (i % size)) / freq;
+			float y = ((float) (i / size)) / freq;
+
+			int r = (int) (128.0f * (1.0f + SimplexNoise.noise(x, y, t)));
+			int g = (int) (128.0f * (1.0f + SimplexNoise.noise(x + size, y, t)));
+			int b = (int) (128.0f * (1.0f + SimplexNoise.noise(x, y + size, t)));
+
+			pixels[i] = (0xff << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+		}
+
+		bmp.setPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+	}
+
 	public static Bitmap load(Context context, String name)
 	{
 		try
