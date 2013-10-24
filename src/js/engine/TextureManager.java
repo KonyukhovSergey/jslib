@@ -127,7 +127,7 @@ public class TextureManager
 			pixels = new int[bmp.getWidth() * bmp.getHeight()];
 		}
 
-		bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+		//bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
 
 		for (int i = 0; i < pixels.length; i++)
 		{
