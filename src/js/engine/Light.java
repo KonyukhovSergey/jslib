@@ -4,26 +4,24 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class Light
 {
-	private static boolean[] isUsed = null;
-	private GL10 gl;
 
-	public Light(GL10 gl)
+	public static void init(GL10 gl, int index)
 	{
-		this.gl = gl;
-		init();
+		float[] values = new float[] { 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1 };
+
+		gl.glLightfv(index, GL10.GL_POSITION, values, 0);
+		gl.glLightfv(index, GL10.GL_AMBIENT, values, 4);
+		gl.glLightfv(index, GL10.GL_DIFFUSE, values, 8);
+		gl.glLightfv(index, GL10.GL_SPECULAR, values, 12);
+
+		gl.glLightf(index, GL10.GL_CONSTANT_ATTENUATION, 1.0f);
+		gl.glLightf(index, GL10.GL_LINEAR_ATTENUATION, 0.0f);
+		gl.glLightf(index, GL10.GL_QUADRATIC_ATTENUATION, 0.0f);
+	}
+
+	public static void setPosition(float x, float y, float z)
+	{
+		float[] values = new float[] { x, y, z, 1 };
 		
-		//gl.glLightfv(light, pname, params, offset);
 	}
-
-	private void init()
-	{
-		if (isUsed != null)
-		{
-			int buff[] = new int[1];
-			gl.glGetIntegerv(gl.GL_MAX_LIGHTS, buff, 0);
-			isUsed = new boolean[buff[0]];
-		}
-
-	}
-
 }

@@ -45,13 +45,10 @@ public class Basis
 
 	public void moveAndRotate(float lr, float ud, float fb, float alr, float aud, float acw)
 	{
-		// перенесем по направляющим базиса
 		px += fx * fb + rx * lr + ux * ud;
 		py += fy * fb + ry * lr + uy * ud;
 		pz += fz * fb + rz * lr + uz * ud;
-		// end
 
-		// теперь повернем направляющие вектора
 		float tx, ty, tz;
 		float sint, cost;
 
@@ -119,7 +116,7 @@ public class Basis
 
 	public void rotateLR(float angle)
 	{
-		// повернем направляющие вектора
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		float tx, ty, tz;
 		float sint, cost;
 
@@ -143,7 +140,7 @@ public class Basis
 
 	public void rotateUD(float angle)
 	{
-		// теперь повернем направляющие вектора
+		// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		float tx, ty, tz;
 		float sint, cost;
 
@@ -168,7 +165,7 @@ public class Basis
 
 	public void rotateCW(float angle)
 	{
-		// теперь повернем направляющие вектора
+		// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		float tx, ty, tz;
 		float sint, cost;
 
@@ -237,7 +234,6 @@ public class Basis
 
 	public void rotate(float alr, float aud, float acw)
 	{
-		// теперь повернем направляющие вектора
 		float tx, ty, tz;
 		float sint, cost;
 
@@ -295,22 +291,22 @@ public class Basis
 		normalize();
 	}
 
-	private float cos(float angle)
+	private static final float cos(float angle)
 	{
 		return FloatMath.cos(angle);
 	}
 
-	private float sin(float angle)
+	private static final float sin(float angle)
 	{
 		return FloatMath.sin(angle);
 	}
 
-	private float sqrt(float value)
+	private static final float sqrt(float value)
 	{
 		return FloatMath.sqrt(value);
 	}
 
-	private float atan2(float x, float y)
+	private static final float atan2(float x, float y)
 	{
 		return (float) Math.atan2(x, y);
 	}
