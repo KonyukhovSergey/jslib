@@ -1,10 +1,11 @@
-package js.engine;
+package js.gles11.tools;
 
 import javax.microedition.khronos.opengles.GL10;
 
 public class Light
 {
 	private int index = GL10.GL_LIGHT0;
+	private GL10 gl = null;
 
 	private float[] values = new float[] { 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1 };
 
@@ -16,7 +17,7 @@ public class Light
 	// 8 - diffuse
 	// 12 - specular
 
-	public Light setProfile(GL10 gl, float constantAttenuation, float linearAttenuation, float quadraticAttenuation)
+	public Light setProfile(float constantAttenuation, float linearAttenuation, float quadraticAttenuation)
 	{
 		gl.glLightf(index, GL10.GL_CONSTANT_ATTENUATION, constantAttenuation);
 		gl.glLightf(index, GL10.GL_LINEAR_ATTENUATION, linearAttenuation);
@@ -25,33 +26,41 @@ public class Light
 		return this;
 	}
 
+	/**
+	 * 
+	 * @param gl
+	 * @param index
+	 *            - zero based!
+	 * @return
+	 */
 	public Light init(GL10 gl, int index)
 	{
 		this.index = GL10.GL_LIGHT0 + index;
+		this.gl = gl;
 
 		gl.glLightfv(index, GL10.GL_POSITION, values, 0);
 		gl.glLightfv(index, GL10.GL_AMBIENT, values, 4);
 		gl.glLightfv(index, GL10.GL_DIFFUSE, values, 8);
 		gl.glLightfv(index, GL10.GL_SPECULAR, values, 12);
 
-		setProfile(gl, 1, 0, 0);
+		setProfile(1, 0, 0);
 
 		return this;
 	}
 
-	public Light on(GL10 gl)
+	public Light on()
 	{
 		gl.glEnable(index);
 		return this;
 	}
 
-	public Light off(GL10 gl)
+	public Light off()
 	{
 		gl.glDisable(index);
 		return this;
 	}
 
-	public Light setPosition(GL10 gl, float x, float y, float z)
+	public Light setPosition(float x, float y, float z)
 	{
 		values[0] = x;
 		values[1] = y;
@@ -60,7 +69,7 @@ public class Light
 		return this;
 	}
 
-	public Light setAmbient(GL10 gl, float r, float g, float b, float a)
+	public Light setAmbient(float r, float g, float b, float a)
 	{
 		values[4] = r;
 		values[5] = g;
@@ -70,7 +79,7 @@ public class Light
 		return this;
 	}
 
-	public Light setDiffuse(GL10 gl, float r, float g, float b, float a)
+	public Light setDiffuse(float r, float g, float b, float a)
 	{
 		values[8] = r;
 		values[9] = g;
@@ -89,5 +98,4 @@ public class Light
 		gl.glLightfv(index, GL10.GL_POSITION, values, 12);
 		return this;
 	}
-
 }
