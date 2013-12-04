@@ -61,7 +61,7 @@ public class Vector3D
 	public final void plus(Vector3D a, Vector3D b)
 	{
 		x = a.x + b.x;
-		y = a.x + b.x;
+		y = a.y + b.y;
 		z = a.z + b.z;
 	}
 

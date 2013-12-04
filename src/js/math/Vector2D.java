@@ -55,7 +55,7 @@ public class Vector2D
 	public final void plus(Vector2D a, Vector2D b)
 	{
 		x = a.x + b.x;
-		y = a.x + b.x;
+		y = a.y + b.y;
 	}
 
 	public final void minus(Vector2D v)
