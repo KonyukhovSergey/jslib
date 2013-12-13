@@ -92,6 +92,11 @@ public class Vector2D
 		return x * x + y * y;
 	}
 
+	public final float dist2(Vector2D b)
+	{
+		return (b.x - x) * (b.x - x) + (b.y - y) * (b.y - y);
+	}
+
 	public final void normalize()
 	{
 		float length = length();

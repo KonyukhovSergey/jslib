@@ -7,7 +7,7 @@ public class Light
 	private int index = GL10.GL_LIGHT0;
 	private GL10 gl = null;
 
-	private float[] values = new float[] { 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1 };
+	private final float[] values = new float[] { 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1 };
 
 	// field sequence - r g b a
 
