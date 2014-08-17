@@ -1,10 +1,6 @@
 package js.data;
 
-import java.util.Iterator;
-
-import android.util.Log;
-
-public class ObjectPool<T extends PoolItem> implements Iterable<T>
+public class PoolContainer<T extends PoolItem> implements PoolInterface<T>
 {
 	private PoolFactory<T> factory = null;
 
@@ -17,13 +13,15 @@ public class ObjectPool<T extends PoolItem> implements Iterable<T>
 	private int releaseCount = 0;
 	private int createCount = 0;
 
-	private ItemsIterator<T> iterator = new ItemsIterator<T>();
-
-	public ObjectPool(PoolFactory<T> factory)
+	public PoolContainer(PoolFactory<T> factory)
 	{
 		this.factory = factory;
 	}
 
+	/* (non-Javadoc)
+	 * @see js.data.PoolInterface#allocate()
+	 */
+	@Override
 	public T allocate()
 	{
 		PoolItem item = null;
@@ -48,6 +46,10 @@ public class ObjectPool<T extends PoolItem> implements Iterable<T>
 		return (T) item;
 	}
 
+	/* (non-Javadoc)
+	 * @see js.data.PoolInterface#release(js.data.PoolItem)
+	 */
+	@Override
 	public void release(PoolItem item)
 	{
 		item.remove();
@@ -57,47 +59,38 @@ public class ObjectPool<T extends PoolItem> implements Iterable<T>
 		releaseCount++;
 	}
 
-	public interface PoolFactory<T>
-	{
-		T create();
-	}
-
+	/* (non-Javadoc)
+	 * @see js.data.PoolInterface#iterate(js.data.PoolItemAction)
+	 */
 	@Override
-	public Iterator<T> iterator()
+	public void iterate(PoolItemAction<T> action)
 	{
-		// Log.d("pool", "get iterator")
-		iterator.item = used;
-		return iterator;
-	}
+		PoolItem item = used.next;
 
-	private static class ItemsIterator<T> implements Iterator<T>
-	{
-		PoolItem item;
-
-		@Override
-		public boolean hasNext()
+		while (item != null)
 		{
-			return item.next != null;
-		}
-
-		@Override
-		public T next()
-		{
+			if (action.act((T) item) == false)
+			{
+				item = item.prev;
+				release(item.next);
+			}
 			item = item.next;
-			return (T) item;
-		}
-
-		@Override
-		public void remove()
-		{
-			item.remove();
 		}
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see js.data.PoolInterface#info()
+	 */
+	@Override
 	public String info()
 	{
 		return "[freeCount=" + freeCount + ", usedCount=" + usedCount + ", diff=" + (allocateCount - releaseCount)
 				+ ", createCount=" + createCount + "]";
+	}
+
+	public interface PoolFactory<T>
+	{
+		T create();
 	}
 
 }
