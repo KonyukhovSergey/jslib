@@ -17,7 +17,7 @@ public class ObjectPool<T extends PoolItem> implements Iterable<T>
 	private int releaseCount = 0;
 	private int createCount = 0;
 
-	private ItemsIterator<T> iterator = new ItemsIterator<T>();
+	private ItemsIterator<T> iterator = new ItemsIterator<T>(free);
 
 	public ObjectPool(PoolFactory<T> factory)
 	{
@@ -67,12 +67,19 @@ public class ObjectPool<T extends PoolItem> implements Iterable<T>
 	{
 		// Log.d("pool", "get iterator")
 		iterator.item = used;
+		
 		return iterator;
 	}
 
-	private static class ItemsIterator<T> implements Iterator<T>
+	private class ItemsIterator<T> implements Iterator<T>
 	{
 		PoolItem item;
+		PoolItem free;
+		
+		public ItemsIterator(PoolItem free)
+		{
+			this.free = free;
+		}
 
 		@Override
 		public boolean hasNext()
@@ -90,7 +97,13 @@ public class ObjectPool<T extends PoolItem> implements Iterable<T>
 		@Override
 		public void remove()
 		{
-			item.remove();
+			PoolItem temp = item;
+			item = item.prev;
+			temp.remove();
+			usedCount--;
+			free.insert(temp);
+			freeCount++;
+			releaseCount++;
 		}
 	}
 
