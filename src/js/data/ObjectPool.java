@@ -2,26 +2,26 @@ package js.data;
 
 import java.util.Iterator;
 
-import android.util.Log;
-
-public class ObjectPool<T extends PoolItem> implements Iterable<T>
+public class ObjectPool<T> implements Iterable<T>
 {
-	private PoolFactory<T> factory = null;
-
 	private PoolItem free = new PoolItem();
 	private PoolItem used = new PoolItem();
 
-	private int freeCount = 0;
-	private int usedCount = 0;
-	private int allocateCount = 0;
-	private int releaseCount = 0;
-	private int createCount = 0;
+	private ObjectFactory<T> factory = null;
 
-	private ItemsIterator<T> iterator = new ItemsIterator<T>(free);
+	private PoolIterator<T> iterator;
 
-	public ObjectPool(PoolFactory<T> factory)
+	public ObjectPool(ObjectFactory<T> factory)
 	{
 		this.factory = factory;
+		iterator = new PoolIterator<T>(free);
+	}
+
+	@Override
+	public Iterator<T> iterator()
+	{
+		iterator.item = used;
+		return iterator;
 	}
 
 	public T allocate()
@@ -30,53 +30,26 @@ public class ObjectPool<T extends PoolItem> implements Iterable<T>
 
 		if (free.next == null)
 		{
-			item = factory.create();
-			createCount++;
+			item = new PoolItem();
+			item.data = factory.create();
 		}
 		else
 		{
 			item = free.next;
 			item.remove();
-			freeCount--;
 		}
 
 		used.insert(item);
-		usedCount++;
 
-		allocateCount++;
-
-		return (T) item;
+		return item.data;
 	}
 
-	public void release(PoolItem item)
-	{
-		item.remove();
-		usedCount--;
-		free.insert(item);
-		freeCount++;
-		releaseCount++;
-	}
-
-	public interface PoolFactory<T>
-	{
-		T create();
-	}
-
-	@Override
-	public Iterator<T> iterator()
-	{
-		// Log.d("pool", "get iterator")
-		iterator.item = used;
-		
-		return iterator;
-	}
-
-	private class ItemsIterator<T> implements Iterator<T>
+	private class PoolIterator<T> implements Iterator<T>
 	{
 		PoolItem item;
 		PoolItem free;
-		
-		public ItemsIterator(PoolItem free)
+
+		public PoolIterator(PoolItem free)
 		{
 			this.free = free;
 		}
@@ -91,7 +64,7 @@ public class ObjectPool<T extends PoolItem> implements Iterable<T>
 		public T next()
 		{
 			item = item.next;
-			return (T) item;
+			return (T) item.data;
 		}
 
 		@Override
@@ -100,17 +73,48 @@ public class ObjectPool<T extends PoolItem> implements Iterable<T>
 			PoolItem temp = item;
 			item = item.prev;
 			temp.remove();
-			usedCount--;
 			free.insert(temp);
-			freeCount++;
-			releaseCount++;
 		}
 	}
 
-	public String info()
+	private class PoolItem
 	{
-		return "[freeCount=" + freeCount + ", usedCount=" + usedCount + ", diff=" + (allocateCount - releaseCount)
-				+ ", createCount=" + createCount + "]";
+		T data;
+
+		PoolItem prev, next;
+
+		final void insert(PoolItem item)
+		{
+			item.prev = this;
+			item.next = next;
+
+			if (next != null)
+			{
+				next.prev = item;
+			}
+
+			next = item;
+		}
+
+		final void remove()
+		{
+			if (prev != null)
+			{
+				prev.next = next;
+			}
+
+			if (next != null)
+			{
+				next.prev = prev;
+			}
+
+			prev = null;
+			next = null;
+		}
 	}
 
+	public interface ObjectFactory<T>
+	{
+		T create();
+	}
 }
