@@ -32,7 +32,7 @@ public class TreeArrayItem
 
 		int childsCount = BitStream.u128from(stream);
 
-		Log.v(TAG, String.format("new TreeArrayItem: name = %s, value = %s, childs = %d", name, value, childsCount));
+		//Log.v(TAG, String.format("new TreeArrayItem: name = %s, value = %s, childs = %d", name, value, childsCount));
 
 		while (childsCount > 0)
 		{
@@ -60,7 +60,7 @@ public class TreeArrayItem
 		BitStream.stringTo(stream, value);
 		BitStream.u128to(stream, childs.size());
 
-		Log.v(TAG, String.format("writeTo: name = %s, value = %s, childs = %d", name, value, childs.size()));
+		//Log.v(TAG, String.format("writeTo: name = %s, value = %s, childs = %d", name, value, childs.size()));
 
 		for (TreeArrayItem child : childs)
 		{

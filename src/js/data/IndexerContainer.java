@@ -1,5 +1,6 @@
 package js.data;
 
+
 public class IndexerContainer<T extends IndexerItem>
 {
 	private T free = null;

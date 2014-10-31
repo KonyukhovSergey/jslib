@@ -28,7 +28,7 @@ public class TextureManager
 
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, indexes[0]);
 
-		Log.v(TAG, String.format("generated texure name = %d", indexes[0]));
+		//Log.v(TAG, String.format("generated texure name = %d", indexes[0]));
 
 		gl.glPixelStorei(GL10.GL_UNPACK_ALIGNMENT, 1);
 
@@ -39,12 +39,12 @@ public class TextureManager
 
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 
-		Log.v(TAG, String.format("texure name = %d is uploaded", indexes[0]));
+		//Log.v(TAG, String.format("texure name = %d is uploaded", indexes[0]));
 
 		if (isRecycleBitmap)
 		{
-			Log.v(TAG, String.format("bitmap %s w = %d h = %d will be recycled", "id = " + bitmap, bitmap.getWidth(),
-					bitmap.getHeight()));
+//			Log.v(TAG, String.format("bitmap %s w = %d h = %d will be recycled", "id = " + bitmap, bitmap.getWidth(),
+//					bitmap.getHeight()));
 			bitmap.recycle();
 		}
 		return indexes[0];

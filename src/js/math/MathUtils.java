@@ -1,7 +1,5 @@
 package js.math;
 
-import android.util.FloatMath;
-
 public class MathUtils
 {
 	private static final float EPSILON = 0.00001f;
@@ -28,12 +26,12 @@ public class MathUtils
 
 	public static float length(float x, float y, float z)
 	{
-		return (float) FloatMath.sqrt(x * x + y * y + z * z);
+		return (float) Math.sqrt(x * x + y * y + z * z);
 	}
 
 	public static float length(float x, float y)
 	{
-		return (float) FloatMath.sqrt(x * x + y * y);
+		return (float) Math.sqrt(x * x + y * y);
 	}
 
 	public static float quad(float x, float y)

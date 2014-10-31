@@ -1,6 +1,5 @@
 package js.math;
 
-import android.util.FloatMath;
 
 public class Vector2D
 {
@@ -84,7 +83,7 @@ public class Vector2D
 
 	public final float length()
 	{
-		return FloatMath.sqrt(x * x + y * y);
+		return (float) Math.sqrt(x * x + y * y);
 	}
 
 	public final float quad()
@@ -179,7 +178,7 @@ public class Vector2D
 			return 0;
 		}
 
-		return scalar(b) / ((FloatMath.sqrt(l1) * FloatMath.sqrt(l2)));
+		return scalar(b) / (((float) Math.sqrt(l1) * (float) Math.sqrt(l2)));
 	}
 
 	@Override

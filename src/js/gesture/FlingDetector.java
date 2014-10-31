@@ -13,14 +13,22 @@ public class FlingDetector
 
 	private FlingDetectorListener flingDetectorListener;
 
-	public FlingDetector(FlingDetectorListener flingDetectorListener)
+	private final int timeResolution;
+
+	public FlingDetector(FlingDetectorListener flingDetectorListener, int timeResolution)
 	{
 		if (flingDetectorListener == null)
 		{
 			throw new NullPointerException("flingDetectorListener == null");
 		}
-		
-		this.flingDetectorListener = flingDetectorListener;	
+
+		this.flingDetectorListener = flingDetectorListener;
+		this.timeResolution = timeResolution;
+	}
+
+	public FlingDetector(FlingDetectorListener flingDetectorListener)
+	{
+		this(flingDetectorListener, 250);
 	}
 
 	public boolean onTouchEvent(MotionEvent event)
@@ -35,47 +43,50 @@ public class FlingDetector
 
 		switch (action)
 		{
-			case MotionEvent.ACTION_DOWN:
-			case MotionEvent.ACTION_POINTER_DOWN:
-			{
-				lastX[id] = x;
-				lastY[id] = y;
-				lastTime[id] = SystemClock.elapsedRealtime();
-			}
-				break;
+		case MotionEvent.ACTION_DOWN:
+		case MotionEvent.ACTION_POINTER_DOWN:
+		{
+			lastX[id] = x;
+			lastY[id] = y;
+			lastTime[id] = SystemClock.elapsedRealtime();
+		}
+			break;
 
-			case MotionEvent.ACTION_MOVE:
+		case MotionEvent.ACTION_MOVE:
+		{
+			int pointerCount = event.getPointerCount();
+			long currentTime = SystemClock.elapsedRealtime();
+
+			for (int i = 0; i < pointerCount; i++)
 			{
-				int pointerCount = event.getPointerCount();
-				long currentTime = SystemClock.elapsedRealtime();
-				
-				for (int i = 0; i < pointerCount; i++)
+				int currentID = event.getPointerId(i);
+				float currentX = event.getX(i);
+				float currentY = event.getY(i);
+
+				if (currentTime - lastTime[currentID] > timeResolution)
 				{
-					int currentID = event.getPointerId(i);
-					float currentX = event.getX(i);
-					float currentY = event.getY(i);
-
 					flingDetectorListener.onFling(lastX[currentID], lastY[currentID], currentX, currentY,
 							(int) (currentTime - lastTime[currentID]));
 
 					lastX[currentID] = currentX;
 					lastY[currentID] = currentY;
 					lastTime[currentID] = currentTime;
-					
+
 					result = true;
 				}
 			}
-				break;
+		}
+			break;
 
-			case MotionEvent.ACTION_UP:
-			case MotionEvent.ACTION_POINTER_UP:
-			{
-				flingDetectorListener.onFling(lastX[id], lastY[id], x, y,
-						(int) (SystemClock.elapsedRealtime() - lastTime[id]));
-				
-				result = true;
-			}
-				break;
+		case MotionEvent.ACTION_UP:
+		case MotionEvent.ACTION_POINTER_UP:
+		{
+			flingDetectorListener.onFling(lastX[id], lastY[id], x, y,
+					(int) (SystemClock.elapsedRealtime() - lastTime[id]));
+
+			result = true;
+		}
+			break;
 		}
 
 		return result;

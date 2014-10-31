@@ -31,7 +31,7 @@ public abstract class BaseEngine extends GLSurfaceView implements FrameRateUpdat
 	
 		timeCounter.start();
 		onLoad(context);
-		Log.v(TAG, String.format("assets loading time: %d ms", timeCounter.ms()));
+		//Log.v(TAG, String.format("assets loading time: %d ms", timeCounter.ms()));
 
 		setEGLContextClientVersion(1);
 		setRenderer(this);

@@ -1,6 +1,7 @@
 package js.data;
 
-public class IndexerItem
+
+public class IndexerItem 
 {
 	private IndexerItem next;
 	private IndexerItem prev;

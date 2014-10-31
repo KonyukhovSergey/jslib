@@ -1,5 +1,6 @@
 package js.gesture;
 
+
 import js.math.MathUtils;
 import android.os.SystemClock;
 import android.view.MotionEvent;
